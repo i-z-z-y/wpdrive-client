@@ -1,7 +1,10 @@
 $ErrorActionPreference = 'Stop'
 
 # ---- Config (edit once, then share) ----
-$REPO_URL = 'https://github.com/i-z-z-y/wpdrive-client/archive/refs/tags/v1.0.1.zip'
+$REPO_OWNER = 'i-z-z-y'
+$REPO_NAME = 'wpdrive-client'
+$REPO_ZIP_MAIN = "https://github.com/$REPO_OWNER/$REPO_NAME/archive/refs/heads/main.zip"
+$REPO_API_LATEST = "https://api.github.com/repos/$REPO_OWNER/$REPO_NAME/releases/latest"
 $INSTALL_SCOPE = 'auto' # auto | user | system
 # Optional overrides via env vars:
 #   WPDRIVE_REPO_URL   (direct URL to zip or git repo)
@@ -13,10 +16,18 @@ function Write-Info($msg) { Write-Host "[wpdrive-installer] $msg" -ForegroundCol
 function Write-Ok($msg) { Write-Host "[wpdrive-installer] $msg" -ForegroundColor Green }
 function Write-Warn($msg) { Write-Host "[wpdrive-installer] $msg" -ForegroundColor Yellow }
 
-$RepoUrl = if ($env:WPDRIVE_REPO_URL) { $env:WPDRIVE_REPO_URL } else { $REPO_URL }
-if ($RepoUrl -match 'YOUR_GITHUB_USER') {
-  throw "Set WPDRIVE_REPO_URL or edit installer\\install.ps1 before running."
+function Get-LatestReleaseZip {
+  try {
+    $headers = @{ Accept = 'application/vnd.github+json' }
+    $resp = Invoke-RestMethod -Uri $REPO_API_LATEST -Headers $headers
+    if ($resp.zipball_url) { return $resp.zipball_url }
+  } catch {
+    Write-Warn "Could not resolve latest release; falling back to main branch zip."
+  }
+  return $REPO_ZIP_MAIN
 }
+
+$RepoUrl = if ($env:WPDRIVE_REPO_URL) { $env:WPDRIVE_REPO_URL } else { Get-LatestReleaseZip }
 
 $Scope = if ($env:WPDRIVE_SCOPE) { $env:WPDRIVE_SCOPE } else { $INSTALL_SCOPE }
 if ($Scope -notin @('auto','user','system')) {

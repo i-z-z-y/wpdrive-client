@@ -1,19 +1,40 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-REPO_URL_DEFAULT="https://github.com/i-z-z-y/wpdrive-client/archive/refs/tags/v1.0.1.zip"
-REPO_URL="${WPDRIVE_REPO_URL:-$REPO_URL_DEFAULT}"
+REPO_OWNER="i-z-z-y"
+REPO_NAME="wpdrive-client"
+REPO_ZIP_MAIN="https://github.com/$REPO_OWNER/$REPO_NAME/archive/refs/heads/main.zip"
+REPO_API_LATEST="https://api.github.com/repos/$REPO_OWNER/$REPO_NAME/releases/latest"
 
-if [[ "$REPO_URL" == *"YOUR_GITHUB_USER"* ]]; then
-  echo "Set WPDRIVE_REPO_URL or edit installer/install.sh before running."
-  exit 1
-fi
+REPO_URL="${WPDRIVE_REPO_URL:-}"
 
 PY_CMD=${WPDRIVE_PY_CMD:-python3}
 
 if ! command -v "$PY_CMD" >/dev/null 2>&1; then
   echo "Python not found. Install Python 3.9+ and retry."
   exit 1
+fi
+
+if [[ -z "$REPO_URL" ]]; then
+  REPO_URL=$("$PY_CMD" - <<'PY'
+import json
+import urllib.request
+
+api = "https://api.github.com/repos/i-z-z-y/wpdrive-client/releases/latest"
+req = urllib.request.Request(api, headers={"Accept": "application/vnd.github+json"})
+try:
+    with urllib.request.urlopen(req, timeout=10) as resp:
+        data = resp.read()
+    obj = json.loads(data)
+    print(obj.get("zipball_url", ""))
+except Exception:
+    print("")
+PY
+)
+  if [[ -z "$REPO_URL" ]]; then
+    echo "Warning: could not resolve latest release; falling back to main branch zip."
+    REPO_URL="$REPO_ZIP_MAIN"
+  fi
 fi
 
 "$PY_CMD" -m pip install --upgrade "$REPO_URL"

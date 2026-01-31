@@ -3,12 +3,13 @@
 WPDrive CLI for syncing WordPress via the WPDrive Sync plugin.
 
 ## Quick install (Windows, one-click)
-1) The installer is pinned to the latest release by default (v1.0.1).
-   To use the bleeding-edge `main` branch, change `REPO_URL` in `installer\install.ps1` to:
+1) The installer resolves the latest GitHub release automatically.
+   To use the bleeding-edge `main` branch, set `WPDRIVE_REPO_URL` to:
    ```
    https://github.com/i-z-z-y/wpdrive-client/archive/refs/heads/main.zip
    ```
 2) Double-click `installer\install.cmd` (or run it in PowerShell).
+   You can also run `installer\install-latest.ps1` to explicitly fetch the newest release.
 
 Optional env vars:
 - WPDRIVE_REPO_URL  (override repo URL)
@@ -20,19 +21,18 @@ Note: If you run as Admin, the installer will add the scripts path to the machin
 
 ## Quick install (macOS/Linux)
 ```bash
-export WPDRIVE_REPO_URL="https://github.com/i-z-z-y/wpdrive-client/archive/refs/tags/v1.0.1.zip"
 bash installer/install.sh
 ```
 
 ## Pip install (direct)
 ```bash
-py -3.14 -m pip install --upgrade https://github.com/i-z-z-y/wpdrive-client/archive/refs/tags/v1.0.1.zip
+py -3.14 -m pip install --upgrade https://github.com/i-z-z-y/wpdrive-client/archive/refs/heads/main.zip
 ```
 
 ## Download Windows EXE
-Release asset (pinned to v1.0.0):
+Latest release asset:
 ```
-https://github.com/i-z-z-y/wpdrive-client/releases/download/v1.0.1/WPDrive-Install.exe
+https://github.com/i-z-z-y/wpdrive-client/releases/latest/download/WPDrive-Install.exe
 ```
 
 ## Build Windows EXE installer
@@ -65,3 +65,7 @@ wpdrive daemon --interval 10 --root "C:\path\to\sync_root"
 - Chunked uploads with auto-backoff on 413/timeouts.
 - Pull-first then push, to reduce conflicts.
 - Optional watchdog dependency: `pip install .[daemon]`.
+
+## Release helpers
+- Checklist: `RELEASE_CHECKLIST.md`
+- Version bump: `scripts\bump-version.ps1`

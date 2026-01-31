@@ -1,16 +1,36 @@
 # Windows EXE installer entrypoint (build with PyInstaller)
+import json
 import os
 import subprocess
 import sys
+import urllib.request
 
-REPO_URL = os.environ.get(
-    "WPDRIVE_REPO_URL",
-    "https://github.com/i-z-z-y/wpdrive-client/archive/refs/tags/v1.0.1.zip",
-)
+REPO_OWNER = "i-z-z-y"
+REPO_NAME = "wpdrive-client"
+REPO_ZIP_MAIN = f"https://github.com/{REPO_OWNER}/{REPO_NAME}/archive/refs/heads/main.zip"
+REPO_API_LATEST = f"https://api.github.com/repos/{REPO_OWNER}/{REPO_NAME}/releases/latest"
 
-if "YOUR_GITHUB_USER" in REPO_URL:
-    print("Set WPDRIVE_REPO_URL or edit installer/win_install.py before building.")
-    sys.exit(1)
+
+def resolve_repo_url() -> str:
+    override = os.environ.get("WPDRIVE_REPO_URL")
+    if override:
+        return override
+    try:
+        req = urllib.request.Request(
+            REPO_API_LATEST, headers={"Accept": "application/vnd.github+json"}
+        )
+        with urllib.request.urlopen(req, timeout=10) as resp:
+            data = json.loads(resp.read().decode("utf-8"))
+        url = data.get("zipball_url")
+        if url:
+            return url
+    except Exception:
+        pass
+    print("[wpdrive-installer] Warning: could not resolve latest release; using main branch zip.")
+    return REPO_ZIP_MAIN
+
+
+REPO_URL = resolve_repo_url()
 
 # Resolve python command for install (prefer py -3.14)
 if os.environ.get("WPDRIVE_PY_EXE"):
