@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-REPO_URL_DEFAULT="https://github.com/i-z-z-y/wpdrive-client/archive/refs/heads/main.zip"
+REPO_URL_DEFAULT="https://github.com/i-z-z-y/wpdrive-client/archive/refs/tags/v1.0.1.zip"
 REPO_URL="${WPDRIVE_REPO_URL:-$REPO_URL_DEFAULT}"
 
 if [[ "$REPO_URL" == *"YOUR_GITHUB_USER"* ]]; then

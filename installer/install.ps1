@@ -1,7 +1,7 @@
 $ErrorActionPreference = 'Stop'
 
 # ---- Config (edit once, then share) ----
-$REPO_URL = 'https://github.com/i-z-z-y/wpdrive-client/archive/refs/heads/main.zip'
+$REPO_URL = 'https://github.com/i-z-z-y/wpdrive-client/archive/refs/tags/v1.0.1.zip'
 $INSTALL_SCOPE = 'auto' # auto | user | system
 # Optional overrides via env vars:
 #   WPDRIVE_REPO_URL   (direct URL to zip or git repo)

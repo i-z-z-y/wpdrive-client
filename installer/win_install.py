@@ -5,7 +5,7 @@ import sys
 
 REPO_URL = os.environ.get(
     "WPDRIVE_REPO_URL",
-    "https://github.com/i-z-z-y/wpdrive-client/archive/refs/heads/main.zip",
+    "https://github.com/i-z-z-y/wpdrive-client/archive/refs/tags/v1.0.1.zip",
 )
 
 if "YOUR_GITHUB_USER" in REPO_URL:
