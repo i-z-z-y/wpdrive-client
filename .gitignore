@@ -15,6 +15,7 @@ pip-wheel-metadata/
 # Installer outputs
 installer/dist/
 installer/build/
+installer/*.spec
 
 # OS
 .DS_Store

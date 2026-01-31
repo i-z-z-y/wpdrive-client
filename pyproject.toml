@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "wpdrive"
-version = "1.0.0"
+version = "1.0.2"
 description = "WPDrive Sync client for WordPress (chunked uploads, multi-device sync)."
 readme = "README.md"
 requires-python = ">=3.9"
@@ -15,3 +15,4 @@ daemon = ["watchdog>=4.0.0"]
 
 [project.scripts]
 wpdrive = "wpdrive.cli:main"
+
