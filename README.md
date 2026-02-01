@@ -66,6 +66,9 @@ wpdrive daemon --interval 10 --root "C:\path\to\sync_root"
 - Pull-first then push, to reduce conflicts.
 - Optional watchdog dependency: `pip install .[daemon]`.
 
+## License
+Proprietary. Internal use only. Not licensed for public redistribution.
+
 ## Release helpers
 - Checklist: `RELEASE_CHECKLIST.md`
 - Version bump: `scripts\bump-version.ps1`
