@@ -23,6 +23,7 @@ import urllib.request
 api = "https://api.github.com/repos/i-z-z-y/wpdrive-client/releases/latest"
 req = urllib.request.Request(api, headers={"Accept": "application/vnd.github+json"})
 try:
+    req.add_header("User-Agent", "wpdrive-installer")
     with urllib.request.urlopen(req, timeout=10) as resp:
         data = resp.read()
     obj = json.loads(data)

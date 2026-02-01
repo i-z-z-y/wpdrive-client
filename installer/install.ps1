@@ -18,7 +18,7 @@ function Write-Warn($msg) { Write-Host "[wpdrive-installer] $msg" -ForegroundCol
 
 function Get-LatestReleaseZip {
   try {
-    $headers = @{ Accept = 'application/vnd.github+json' }
+    $headers = @{ Accept = 'application/vnd.github+json'; 'User-Agent' = 'wpdrive-installer' }
     $resp = Invoke-RestMethod -Uri $REPO_API_LATEST -Headers $headers
     if ($resp.zipball_url) { return $resp.zipball_url }
   } catch {
@@ -52,20 +52,26 @@ if ($env:WPDRIVE_PY_EXE) {
 }
 
 function Invoke-Checked([string[]]$Cmd, [string[]]$Args = @()) {
+  $prev = $ErrorActionPreference
+  $ErrorActionPreference = 'Continue'
   $all = @()
   if ($Cmd.Length -gt 1) { $all += $Cmd[1..($Cmd.Length-1)] }
   if ($Args) { $all += $Args }
   $output = & $Cmd[0] @all 2>&1
+  $ErrorActionPreference = $prev
   $output | ForEach-Object { Write-Host $_ }
   if ($LASTEXITCODE -ne 0) { throw "Command failed: $($Cmd -join ' ')" }
   return $output
 }
 
 function Invoke-Capture([string[]]$Cmd, [string[]]$Args = @()) {
+  $prev = $ErrorActionPreference
+  $ErrorActionPreference = 'Continue'
   $all = @()
   if ($Cmd.Length -gt 1) { $all += $Cmd[1..($Cmd.Length-1)] }
   if ($Args) { $all += $Args }
   $output = & $Cmd[0] @all 2>&1
+  $ErrorActionPreference = $prev
   if ($LASTEXITCODE -ne 0) {
     $output | ForEach-Object { Write-Host $_ }
     throw "Command failed: $($Cmd -join ' ')"

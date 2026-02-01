@@ -69,3 +69,4 @@ wpdrive daemon --interval 10 --root "C:\path\to\sync_root"
 ## Release helpers
 - Checklist: `RELEASE_CHECKLIST.md`
 - Version bump: `scripts\bump-version.ps1`
+- CI: `.github\workflows\release.yml` builds and attaches the EXE on tag pushes

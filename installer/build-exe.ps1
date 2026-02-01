@@ -4,7 +4,7 @@ $ErrorActionPreference = 'Stop'
 # Output: installer\dist\WPDrive-Install.exe
 
 $root = Split-Path -Parent $PSScriptRoot
-$py = @('py','-3.14')
+$py = if (Get-Command py -ErrorAction SilentlyContinue) { @('py','-3.14') } else { @('python') }
 
 Write-Host "Installing PyInstaller..." -ForegroundColor Cyan
 & $py[0] $py[1] -m pip install --upgrade pyinstaller

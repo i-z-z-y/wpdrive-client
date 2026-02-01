@@ -17,7 +17,11 @@ def resolve_repo_url() -> str:
         return override
     try:
         req = urllib.request.Request(
-            REPO_API_LATEST, headers={"Accept": "application/vnd.github+json"}
+            REPO_API_LATEST,
+            headers={
+                "Accept": "application/vnd.github+json",
+                "User-Agent": "wpdrive-installer",
+            },
         )
         with urllib.request.urlopen(req, timeout=10) as resp:
             data = json.loads(resp.read().decode("utf-8"))
